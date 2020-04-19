@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index ajax</title>
+</head>
+<body>
+<h1>this is ajax index page.</h1>
+
+<div id="imgs">
+    假装有图
+</div>
+
+<input type="button" value="ajax发送get请求" onclick="sendGetAjax()">
+<input type="button" value="ajax发送post请求" onclick="sendPostAjax()">
+
+<form></form>
+<script>
+    function sendGetAjax() {
+
+        var xhr;
+
+        //  1.创建XMLHttpRequest对象
+        if (window.XMLHttpRequest) {
+            //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+            xhr = new XMLHttpRequest();
+        }else {
+            // IE6, IE5 浏览器执行代码
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        // 2.设置onreadystatechange的回调函数
+        xhr.onreadystatechange=function(){
+
+            console.log(xhr.readyState);
+
+            if(xhr.readyState == 4 && xhr.status == 200){
+               alert(xhr.responseText)
+
+                /*
+                *innerText和innerHtml的区别？
+                *   innerText：直接将文本内容显示，不解析各种html的标签
+                *   innerHtml：将文本内容显示，将标签内容解析
+                * */
+                //document.getElementById("imgs").innerHTML=xhr.responseText;
+            }
+        }
+
+        // 3.打开链接
+        xhr.open("GET","AjaxServlet?username=zhangsan&password=888888",true);
+
+        // 4.发送请求
+        xhr.send();
+
+        //alert(xhr);
+    }
+
+
+    function sendPostAjax() {
+
+        var xhr;
+
+        //  1.创建XMLHttpRequest对象
+        if (window.XMLHttpRequest) {
+            //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+            xhr = new XMLHttpRequest();
+        }else {
+            // IE6, IE5 浏览器执行代码
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        // 2.设置onreadystatechange的回调函数
+        xhr.onreadystatechange=function(){
+
+            //console.log(xhr.readyState);
+
+            if(xhr.readyState == 4 && xhr.status == 200){
+                alert(xhr.responseText)
+
+                /*
+                *innerText和innerHtml的区别？
+                *   innerText：直接将文本内容显示，不解析各种html的标签
+                *   innerHtml：将文本内容显示，将标签内容解析
+                * */
+                //document.getElementById("imgs").innerHTML=xhr.responseText;
+            }
+        }
+
+        // 3.打开链接
+        xhr.open("POST","AjaxServlet",true);
+        xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+
+        // 4.发送请求
+        xhr.send("username=zhangsan&password=123456");
+
+        //alert(xhr);
+    }
+</script>
+</body>
+</html>
