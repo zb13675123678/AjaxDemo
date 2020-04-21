@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>search</title>
+    <style type="text/css">
+        #imgDiv{
+            margin-top:200px;
+            margin-left: 500px;
+        }
+        #par{
+            width: 600px;
+            height: 480px;
+            position: absolute;
+            left: 30%;
+        }
+        #keyword{
+            width: 400px;
+            height: 30px;
+            margin-top: 30px;
+            border: 1px solid green;
+            font-size: 20px;
+        }
+        #search{
+            width: 100px;
+            height: 30px;
+            font-size: 18px;
+        }
+        .tdhover{
+            background-color: gray;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="imgDiv">
+        <img src="imgs/qfedu.png" width="300px" >
+    </div>
+    <div id="par">
+        <input type="text" id="keyword" onkeyup="getContent()">
+        <button id="search">百度一下</button>
+        <table>
+            <tbody id="bodyId">
+                <!--<tr>
+                    <td>javaScript</td>
+                </tr>
+                <tr>
+                    <td>java</td>
+                </tr>
+                <tr>
+                    <td>jsp</td>
+                </tr>-->
+            </tbody>
+        </table>
+    </div>
+    <script>
+
+        var xhr;
+
+        //创建对象创建方法的提取
+        function create() {
+
+            if(window.XMLHttpRequest){
+                xhr = new XMLHttpRequest();
+            }else{
+                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+        }
+
+        //ajax异步与后端交互，得到具体数据并在当前页面渲染
+        function getContent() {
+
+            create();
+
+            var keyword = document.getElementById("keyword").value;
+
+
+            //回调函数
+            xhr.onreadystatechange = callback;
+
+
+            //发送连接
+            xhr.open("GET","SearchServlet?keyword="+keyword,true);
+
+
+            //发送ajax请求
+            xhr.send();
+
+        }
+
+        //回调函数的提取
+        function callback() {
+            if(xhr.readyState == 4 && xhr.status == 200){
+
+                //回调数据json: eval（）函数用来解析json字符串
+                var content = eval(xhr.responseText);
+
+                createTD(content);
+                setListener(content);
+            }
+        }
+
+        //获取数据进行页面渲染方法提取
+        function createTD(c) {
+
+            //清除原有数据内容
+            clearContent()
+
+            //获取渲染区域对象
+            var tbody = document.getElementById("bodyId");
+
+            //遍历渲染:创建元素对象组装进行渲染
+            for (var i = 0; i < c.length; i++) {
+                var c = c[i];
+
+                var tr = document.createElement("tr");
+                var td = document.createElement("td");
+
+                td.setAttribute("id","id"+i);//给每个数据的td添加一个id属相(用作js样式)
+
+                var cc = document.createTextNode(c);
+
+                tr.appendChild(td);
+                td.appendChild(cc);
+                tbody.appendChild(tr);
+            }
+        }
+
+        //清除tbody中的所有子元素
+        function clearContent() {
+
+            var tbody = document.getElementById("bodyId");
+            //子元素的个数
+            var size = tbody.childNodes.length;
+
+            //遍历所有元素，从尾部删除；（防止越界）
+            for (var i = size - 1; i >=0 ; i--) {
+                tbody.removeChild(tbody.childNodes[i]);
+            }
+        }
+
+        //回调函数中添加的js事件
+        function setListener(c) {
+            for (var i = 0; i <  c.length; i++) {
+
+                // 给每个td添加点击事件监听:每一次点击都将关键字添加到文本框
+               document.getElementById("id"+i).addEventListener("click",function () {
+                   document.getElementById("keyword").value = this.innerHTML;
+               })
+
+                //给每个td添加鼠标悬浮事件监听：每一次悬浮都会变大
+                document.getElementById("id"+i).addEventListener("mouseover",function (ev) {
+                    this.setAttribute("class","tdhover");
+                })
+
+                //给每一个td添加鼠标离开事件：每一次离开恢复原样
+                document.getElementById("id"+i).addEventListener("mouseout",function (ev) {
+                    this.setAttribute("class","kill");
+                })
+            }
+        }
+    </script>
+</body>
+</html>
