@@ -33,6 +33,9 @@ public class SearchServlet extends HttpServlet {
         response.getWriter().write(gson.toJson(list));
     }
 
+    /**
+     * 根据关键字判断数据源，并返回数据
+     */
     private List<String> getResult(String keyword) {
         List<String> list = new ArrayList<>();
 
